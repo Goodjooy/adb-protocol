@@ -1,0 +1,19 @@
+[package]
+name = "adb-protocol"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+hex="0.4"
+byteorder="1"
+futures-util = "0.3.21"
+
+[dependencies.tower]
+version="0.4"
+features=["util"]
+
+[dependencies.tokio]
+version="1"
+features=["full"]
