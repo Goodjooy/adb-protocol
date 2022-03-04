@@ -4,7 +4,7 @@ use futures_util::Future;
 use tokio::{io::AsyncReadExt, net::tcp::ReadHalf};
 use tower::Service;
 
-use crate::{commands::Cmd, utils::adb_ext::read_resp_body, AdbError};
+use crate::{commands::RespHandler, utils::adb_ext::read_resp_body, AdbError};
 
 pub struct ImmCmdRespService;
 
@@ -18,7 +18,7 @@ impl<C, R> ImmCmdReq<C, R> {
 
 impl<'r, C> Service<ImmCmdReq<C, ReadHalf<'r>>> for ImmCmdRespService
 where
-    C: Cmd,
+    C: RespHandler,
 {
     type Response = (C::Resp, ReadHalf<'r>);
 

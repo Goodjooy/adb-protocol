@@ -49,8 +49,7 @@ mod tests {
         // let _res = fut.await.unwrap();
 
         trigger.tick().await;
-        let cmd = ShellCmdBuilder::with_no_resp("")
-            .build();
+        let cmd = ShellCmdBuilder::with_no_resp("").build();
 
         let res = protocol.imm_queue(cmd).await.unwrap();
 

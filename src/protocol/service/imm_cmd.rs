@@ -1,6 +1,6 @@
 use crate::{
-    commands::ImmCmd,
-    protocol::{adb_respond::AdbError, service::Cmd},
+    commands::{ImmCmd, RespHandler},
+    protocol::adb_respond::AdbError,
     utils::imm_cmd::{
         req_service::ImmCmdReqService,
         resp_service::{ImmCmdReq, ImmCmdRespService},
@@ -18,7 +18,7 @@ use crate::Protocol;
 
 impl<Req> Service<ImmCmd<Req>> for Protocol
 where
-    Req: Cmd,
+    Req: RespHandler,
 {
     type Response = Req::Resp;
 

@@ -2,7 +2,7 @@ use std::sync::{atomic::AtomicBool, Arc};
 use tokio::{net::TcpStream, sync::Mutex};
 use tower::{util::Ready, Service, ServiceExt};
 
-use crate::commands::{RespHandler, Cmd, CmdExt, ImmCmd};
+use crate::commands::{CmdExt, ImmCmd, RespHandler};
 
 use super::{adb_respond::AdbError, config::Config, Protocol};
 
@@ -24,7 +24,7 @@ impl Protocol {
         cmd: T,
     ) -> Result<<T as RespHandler>::Resp, AdbError<<T as RespHandler>::Error>>
     where
-        T: Cmd + 'static,
+        T: RespHandler + 'static,
     {
         let fut: Ready<_, ImmCmd<T>> = self.ready();
         let p = fut.await?;

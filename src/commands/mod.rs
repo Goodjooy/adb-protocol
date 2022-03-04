@@ -1,21 +1,28 @@
 pub mod ad_hoc;
 pub mod derives;
 pub mod shell_cmd;
-pub mod to_shell;
+pub mod switch_shell;
 pub mod transport;
 use tokio::net::tcp::ReadHalf;
 
+use std::io::Read;
 use std::{borrow::Cow, future::Future};
 
-pub trait Cmd: RespHandler {
+pub trait Cmd {
     fn cmd(self) -> Cow<'static, str>;
 }
 
-pub trait RespHandler {
+pub trait RespHandler: Cmd {
     type Fut<'r>: Future<Output = Result<(Self::Resp, ReadHalf<'r>), Self::Error>>;
     type Resp;
     type Error;
     fn handle<'r>(reader: ReadHalf<'r>) -> Self::Fut<'r>;
+}
+
+pub trait SyncHandler: Cmd {
+    type Resp;
+    type Err;
+    fn sync_handle<R: Read>(reader: R) -> Result<Self::Resp, Self::Err>;
 }
 
 /// Immediate Command 立即完成的指令类型
@@ -29,6 +36,7 @@ pub struct InteractCmd<C>(pub(crate) C);
 /// Live Update Command 持续接收指令类型
 /// 将会持续等待stream 的结果
 pub struct LiveUpdateCmd<C>(pub(crate) C);
+
 
 pub trait CmdExt: Cmd + Sized {
     fn as_imm(self) -> ImmCmd<Self> {
@@ -49,4 +57,4 @@ pub use shell_cmd::ShellCmd;
 pub use shell_cmd::ShellCmdBuilder;
 pub use transport::TransPort;
 
-pub use to_shell::ToShell;
+pub use switch_shell::SwitchShell;

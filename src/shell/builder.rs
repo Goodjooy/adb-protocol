@@ -1,8 +1,8 @@
-use std::{convert::Infallible, time::Duration, io};
+use std::{convert::Infallible, io, time::Duration};
 
 use tokio::time;
 
-use crate::{commands::{TransPort, to_shell::ToShell}, AdbError, Config, Protocol};
+use crate::{commands::{TransPort, switch_shell::SwitchShell}, AdbError, Config, Protocol};
 
 use super::Shell;
 
@@ -22,8 +22,7 @@ impl ShellBuilder {
         transport: TransPort,
     ) -> Result<Shell, AdbError<io::Error>> {
         let _ = self.inner.imm_queue(transport).await.unwrap();
-        let _ = self.inner.imm_queue(ToShell).await.unwrap();
+        // let _ = self.inner.imm_queue(SwitchShell::Shell).await.unwrap();
         Ok(Shell { proto: self.inner })
     }
 }
-
