@@ -2,7 +2,9 @@ use std::sync::{atomic::AtomicBool, Arc, Mutex};
 use tokio::net::TcpStream;
 use tower::{util::Ready, Service, ServiceExt};
 
-use super::{adb_respond::AdbError, commands::{Cmd, RespHandler}, config::Config, Protocol};
+use crate::commands::{RespHandler, Cmd};
+
+use super::{adb_respond::AdbError, config::Config, Protocol};
 
 impl Protocol {
     pub async fn with_config(cfg: Config) -> Self {
@@ -17,7 +19,13 @@ impl Protocol {
         }
     }
 
-    pub async fn queue<T: Cmd + 'static>(&mut self, cmd: T) -> Result<<T as RespHandler>::Resp, AdbError<<T as RespHandler>::Error>> {
+    pub async fn queue<T>(
+        &mut self,
+        cmd: T,
+    ) -> Result<<T as RespHandler>::Resp, AdbError<<T as RespHandler>::Error>>
+    where
+        T: Cmd + 'static,
+    {
         let fut: Ready<_, T> = self.ready();
         let p = fut.await?;
         p.call(cmd).await

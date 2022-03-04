@@ -1,5 +1,7 @@
+pub mod shell_cmd;
 pub mod derives;
 pub mod transport;
+pub mod  to_shell;
 use tokio::net::tcp::ReadHalf;
 
 use std::{borrow::Cow, future::Future};
@@ -22,3 +24,9 @@ pub enum ConnectStatus {
     KeepAlive,
     Close,
 }
+pub use derives::Derives;
+pub use transport::TransPort;
+pub use shell_cmd::ShellCmd;
+pub use shell_cmd::ShellCmdBuilder;
+
+pub use to_shell::ToShell;

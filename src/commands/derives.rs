@@ -37,6 +37,8 @@ impl RespHandler for Derives {
 
             let full = unsafe { String::from_utf8_unchecked(res) };
 
+            // println!("{:?}",full);
+
             let iter = full.split('\n').filter_map(|s| {
                 let mut inner = s.split('\t');
                 let id = inner.next()?.to_owned();

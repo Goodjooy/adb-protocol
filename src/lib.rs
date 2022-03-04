@@ -3,10 +3,18 @@
 #![feature(type_alias_impl_trait)]
 #![feature(generic_associated_types)]
 
+pub mod commands;
 mod protocol;
+mod shell;
 #[cfg(test)]
 mod tests {
-    use crate::protocol::{commands::derives::Derives, config::Config, Protocol};
+    use std::time::Duration;
+
+    use crate::{
+        commands::{shell_cmd::ShellCmdBuilder, Derives, TransPort},
+        protocol::{config::Config, Protocol},
+        shell::builder::ShellBuilder,
+    };
 
     #[test]
     fn it_works() {
@@ -26,4 +34,43 @@ mod tests {
 
         println!("Res {:#?}", &res);
     }
+
+    #[tokio::test]
+    async fn test_adb_transport() {
+        let mut trigger = tokio::time::interval(Duration::from_millis(500));
+        let config = Config {
+            host: [127, 0, 0, 1].into(),
+            port: 5037,
+        };
+        let mut protocol = ShellBuilder::with_config(config)
+            .await
+            .connect_to_device(TransPort::Usb)
+            .await
+            .unwrap();
+
+        // trigger.tick().await;
+        // let fut = protocol.queue(TransPort::Usb);
+        // let _res = fut.await.unwrap();
+
+        trigger.tick().await;
+        let cmd = ShellCmdBuilder::with_no_resp("input")
+            .arg("text")
+            .arg("abbcc")
+            .build();
+
+        let res = protocol.queue(cmd).await.unwrap();
+
+        println!("Res {:#?}", &res);
+
+        // trigger.tick().await;
+        // let cmd=ShellCmdBuilder::with_no_resp("input").arg("keyevent").arg("3").build();
+
+        // let res=protocol.queue(cmd).await.unwrap();
+
+        println!("Res {:#?}", &res);
+    }
 }
+
+pub use protocol::adb_respond::AdbError;
+pub use protocol::config::Config;
+pub use protocol::Protocol;

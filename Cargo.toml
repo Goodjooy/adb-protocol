@@ -9,6 +9,7 @@ edition = "2021"
 hex="0.4"
 byteorder="1"
 futures-util = "0.3.21"
+chrono="0.4"
 
 [dependencies.tower]
 version="0.4"
@@ -17,3 +18,6 @@ features=["util"]
 [dependencies.tokio]
 version="1"
 features=["full"]
+
+# [dependencies.opencv-rust]
+# version="0"

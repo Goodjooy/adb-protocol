@@ -1,5 +1,4 @@
 pub mod adb_respond;
-pub mod commands;
 pub mod config;
 mod impls;
 mod service;

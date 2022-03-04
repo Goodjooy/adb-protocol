@@ -7,9 +7,10 @@ use std::{
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tower::Service;
 
+use crate::commands::Cmd;
+
 use super::{
     adb_respond::{self, AdbError},
-    commands::Cmd,
     Protocol,
 };
 
@@ -72,7 +73,7 @@ where
                         .map_err(AdbError::Io)?;
                     Err(AdbError::Failure(info))
                 }
-                _ => Err(AdbError::Unknown),
+                _ => Err(AdbError::Unknown(String::from_utf8(resp.into()).unwrap().into())),
             }
         }
     }

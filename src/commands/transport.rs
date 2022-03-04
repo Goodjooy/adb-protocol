@@ -1,9 +1,8 @@
 use futures_util::future::{ok, Ready};
 use tokio::net::tcp::ReadHalf;
 
-use crate::protocol::commands::Cmd;
 
-use super::RespHandler;
+use super::{RespHandler, Cmd};
 
 pub enum TransPort {
     Serial(String),

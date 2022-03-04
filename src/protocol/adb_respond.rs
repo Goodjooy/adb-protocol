@@ -1,4 +1,4 @@
-use std::num::ParseIntError;
+use std::{num::ParseIntError, borrow::Cow};
 
 
 #[derive(Debug)]
@@ -7,5 +7,5 @@ pub enum AdbError<E> {
     Io(std::io::Error),
     Parse(ParseIntError),
     Failure(String),
-    Unknown
+    Unknown(Cow<'static,str>)
 }
