@@ -6,14 +6,14 @@
 pub mod commands;
 mod protocol;
 mod shell;
+mod utils;
 #[cfg(test)]
 mod tests {
     use std::time::Duration;
 
     use crate::{
-        commands::{shell_cmd::ShellCmdBuilder, Derives, TransPort},
+        commands::{shell_cmd::ShellCmdBuilder, Derives},
         protocol::{config::Config, Protocol},
-        shell::builder::ShellBuilder,
     };
 
     #[test]
@@ -29,7 +29,7 @@ mod tests {
         };
         let mut protocol = Protocol::with_config(config).await;
 
-        let fut = protocol.queue(Derives);
+        let fut = protocol.imm_queue(Derives);
         let res = fut.await;
 
         println!("Res {:#?}", &res);
@@ -42,23 +42,17 @@ mod tests {
             host: [127, 0, 0, 1].into(),
             port: 5037,
         };
-        let mut protocol = ShellBuilder::with_config(config)
-            .await
-            .connect_to_device(TransPort::Usb)
-            .await
-            .unwrap();
+        let mut protocol = Protocol::with_config(config).await;
 
         // trigger.tick().await;
         // let fut = protocol.queue(TransPort::Usb);
         // let _res = fut.await.unwrap();
 
         trigger.tick().await;
-        let cmd = ShellCmdBuilder::with_no_resp("input")
-            .arg("text")
-            .arg("abbcc")
+        let cmd = ShellCmdBuilder::with_no_resp("")
             .build();
 
-        let res = protocol.queue(cmd).await.unwrap();
+        let res = protocol.imm_queue(cmd).await.unwrap();
 
         println!("Res {:#?}", &res);
 

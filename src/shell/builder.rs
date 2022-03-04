@@ -21,8 +21,9 @@ impl ShellBuilder {
         mut self,
         transport: TransPort,
     ) -> Result<Shell, AdbError<io::Error>> {
-        let _ = self.inner.queue(transport).await.unwrap();
-        let _ = self.inner.queue(ToShell).await.unwrap();
+        let _ = self.inner.imm_queue(transport).await.unwrap();
+        let _ = self.inner.imm_queue(ToShell).await.unwrap();
         Ok(Shell { proto: self.inner })
     }
 }
+

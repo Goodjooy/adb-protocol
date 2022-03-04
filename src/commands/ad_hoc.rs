@@ -4,7 +4,9 @@ use std::convert::Infallible;
 macro_rules! cmd_generate {
     (
         $(#[$mm:meta])*
-        $vv:vis $name:ident [$cmd:literal]<$out:ty,$err:ty>
+        $vv:vis $name:ident 
+        [$cmd:literal]
+        <$out:ty,$err:ty>
         $handle:expr
     ) => {
         /// 通过宏生成的Cmd
@@ -33,8 +35,10 @@ macro_rules! cmd_generate {
 
 cmd_generate!(
     /// 不是真的
-    pub Mock ["host:mock"]<(),Infallible>
-      |reader|  async{
-            Ok(((),reader))
-        }
+    pub Mock 
+    ["host:mock"]
+    <(),Infallible>
+    |reader|async{
+        Ok(((),reader))
+    }
 );

@@ -1,8 +1,8 @@
-use std::sync::{atomic::AtomicBool, Arc, Mutex};
-use tokio::net::TcpStream;
+use std::sync::{atomic::AtomicBool, Arc};
+use tokio::{net::TcpStream, sync::Mutex};
 use tower::{util::Ready, Service, ServiceExt};
 
-use crate::commands::{RespHandler, Cmd};
+use crate::commands::{RespHandler, Cmd, CmdExt, ImmCmd};
 
 use super::{adb_respond::AdbError, config::Config, Protocol};
 
@@ -19,15 +19,15 @@ impl Protocol {
         }
     }
 
-    pub async fn queue<T>(
+    pub async fn imm_queue<T>(
         &mut self,
         cmd: T,
     ) -> Result<<T as RespHandler>::Resp, AdbError<<T as RespHandler>::Error>>
     where
         T: Cmd + 'static,
     {
-        let fut: Ready<_, T> = self.ready();
+        let fut: Ready<_, ImmCmd<T>> = self.ready();
         let p = fut.await?;
-        p.call(cmd).await
+        p.call(cmd.as_imm()).await
     }
 }

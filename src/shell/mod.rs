@@ -17,15 +17,15 @@ pub struct Shell {
 }
 
 impl Shell {
-    pub async fn queue<const T: bool>(
-        &mut self,
-        cmd: ShellCmd<T>,
-    ) -> Result<<ShellCmd<T> as RespHandler>::Resp, AdbError<<ShellCmd<T> as RespHandler>::Error>>
-    {
-        let fut: tower::util::Ready<Shell, ShellCmd<T>> = self.ready();
-        let p = fut.await?;
-        p.call(cmd).await
-    }
+    // pub async fn queue<const T: bool>(
+    //     &mut self,
+    //     cmd: ShellCmd<T>,
+    // ) -> Result<<ShellCmd<T> as RespHandler>::Resp, AdbError<<ShellCmd<T> as RespHandler>::Error>>
+    // {
+    //     let fut: tower::util::Ready<Shell, ShellCmd<T>> = self.ready();
+    //     let p = fut.await?;
+    //     p.call(cmd).await
+    // }
 }
 
 pub struct WCmd<const R: bool> {
