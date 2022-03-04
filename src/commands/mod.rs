@@ -1,3 +1,4 @@
+pub mod ad_hoc;
 pub mod shell_cmd;
 pub mod derives;
 pub mod transport;
